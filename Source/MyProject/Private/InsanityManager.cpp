@@ -19,7 +19,7 @@ AInsanityManager::AInsanityManager()
     ScreenPostProcess->SetupAttachment(RootComponent);
 
     // Create the timeline component
-    FadeTimeline = CreateDefaultSubobject<UTimelineComponent>(TEXT("FadeTimeline"));
+   
 }
 
 void AInsanityManager::BeginPlay()
@@ -43,21 +43,15 @@ void AInsanityManager::BeginPlay()
     }
 
     // Bind the timeline functions
-    if (FadeCurve)
-    {
-        FOnTimelineFloat TimelineCallback;
-        TimelineCallback.BindUFunction(this, FName("FadeTimelineCallback"));
-        FadeTimeline->AddInterpFloat(FadeCurve, TimelineCallback);
-    }
+    
 
     // Set the timeline properties
-    FadeTimeline->SetLooping(false);
-    FadeTimeline->SetIgnoreTimeDilation(true);
+
 
     // Bind the finished event of the timeline
     FOnTimelineEvent TimelineFinishedCallback;
     TimelineFinishedCallback.BindUFunction(this, FName("FadeTimelineFinished"));
-    FadeTimeline->SetTimelineFinishedFunc(TimelineFinishedCallback);
+    
 }
 
 void AInsanityManager::CalculateInsanityMeter()
@@ -75,37 +69,21 @@ void AInsanityManager::CalculateInsanityMeter()
         if (Distance > MaxDistance)
         {
             InsanityMeter += InsanityIncreaseRate;
-            if (InsanityMeter > InsanityThreshold && !FadeTimeline->IsPlaying())
+            if (InsanityMeter > InsanityThreshold)
             {
                 // Start the timeline to fade the screen to gray
-                FadeTimeline->PlayFromStart();
+                
             }
         }
         else
         {
             InsanityMeter -= InsanityDecreaseRate;
-            if (InsanityMeter <= InsanityThreshold && !FadeTimeline->IsReversing() && FadeTimeline->IsPlaying())
+            if (InsanityMeter <= InsanityThreshold)
             {
                 // Reverse the timeline to fade the screen back to normal
-                FadeTimeline->Reverse();
+                
             }
         }
-    }
-}
-
-void AInsanityManager::FadeTimelineCallback(float Value)
-{
-    FPostProcessSettings& Settings = ScreenPostProcess->Settings;
-    Settings.bOverride_Saturation = true;
-    Settings.FilmSaturation = FMath::Lerp(1.0f, 0.5f, Value);
-}
-
-void AInsanityManager::FadeTimelineFinished()
-{
-    if (InsanityMeter <= InsanityThreshold)
-    {
-        FPostProcessSettings& Settings = ScreenPostProcess->Settings;
-        Settings.bOverride_Saturation = false;
     }
 }
 
