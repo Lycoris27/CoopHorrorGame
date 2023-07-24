@@ -2,6 +2,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/PlayerController.h"
 #include "Components/PostProcessComponent.h"
+#include "Components/TimelineComponent.h"
 
 AInsanityManager::AInsanityManager()
 {
@@ -16,27 +17,16 @@ AInsanityManager::AInsanityManager()
     RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
     ScreenPostProcess = CreateDefaultSubobject<UPostProcessComponent>(TEXT("ScreenPostProcess"));
     ScreenPostProcess->SetupAttachment(RootComponent);
+
+    // Create the timeline component
+   
 }
 
 void AInsanityManager::BeginPlay()
 {
     Super::BeginPlay();
 
-    // Bind CalculateInsanityMeter to run every second
-    GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &AInsanityManager::CalculateInsanityMeter, 1.0f, true);
-
-
-
-    // Assign post-process volume to ScreenPostProcess
-    TArray<AActor*> PostProcessVolumes;
-    UGameplayStatics::GetAllActorsOfClass(GetWorld(), UPostProcessComponent::StaticClass(), PostProcessVolumes);
-    if (PostProcessVolumes.Num() > 0)
-    {
-        UPostProcessComponent* PostProcessVolume = Cast<UPostProcessComponent>(PostProcessVolumes[0]);
-        ScreenPostProcess->BlendRadius = PostProcessVolume->BlendRadius;
-        ScreenPostProcess->Settings = PostProcessVolume->Settings;
-    }
-
+    // Bind the CalculateInsanityMeter function to run every second
     GetWorldTimerManager().SetTimer(TimerHandle, this, &AInsanityManager::CalculateInsanityMeter, 1.0f, true);
 
     APlayerController* Player1Controller = UGameplayStatics::GetPlayerController(GetWorld(), 0);
@@ -50,7 +40,17 @@ void AInsanityManager::BeginPlay()
     if (Player2Controller)
     {
         ScreenPostProcess->AttachToComponent(Player2Controller->GetPawn()->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
-    } 
+    }
+
+    // Bind the timeline functions
+    
+
+    // Set the timeline properties
+
+
+    // Bind the finished event of the timeline
+    FOnTimelineEvent TimelineFinishedCallback;
+    TimelineFinishedCallback.BindUFunction(this, FName("FadeTimelineFinished"));
     
 }
 
@@ -71,13 +71,8 @@ void AInsanityManager::CalculateInsanityMeter()
             InsanityMeter += InsanityIncreaseRate;
             if (InsanityMeter > InsanityThreshold)
             {
-                // Adjust the post-processing settings to make the screen go gray
-                FPostProcessSettings& Settings = ScreenPostProcess->Settings;
-                Settings.bOverride_FilmSlope = true;
-                Settings.FilmSlope = 0.0f; // Adjust the value as needed
-                Settings.bOverride_FilmToe = true;
-                Settings.FilmToe = 1.0f; // Adjust the value as needed
-                ScreenPostProcess->BlendWeight = 1.0f;
+                // Start the timeline to fade the screen to gray
+                
             }
         }
         else
@@ -85,16 +80,13 @@ void AInsanityManager::CalculateInsanityMeter()
             InsanityMeter -= InsanityDecreaseRate;
             if (InsanityMeter <= InsanityThreshold)
             {
-                // Reset the post-processing settings to default
-                FPostProcessSettings& Settings = ScreenPostProcess->Settings;
-                Settings.bOverride_FilmSlope = false;
-                Settings.bOverride_FilmToe = false;
-                ScreenPostProcess->BlendWeight = 0.0f;
+                // Reverse the timeline to fade the screen back to normal
+                
             }
         }
     }
 }
- 
+
  
 
  
