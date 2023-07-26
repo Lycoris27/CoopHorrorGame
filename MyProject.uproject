@@ -31,6 +31,10 @@
 		{
 			"Name": "RawInput",
 			"Enabled": true
+		},
+		{
+			"Name": "FbxAutomationTestBuilder",
+			"Enabled": true
 		}
 	]
 }
