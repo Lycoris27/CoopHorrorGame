@@ -8,7 +8,7 @@ AInsanityManager::AInsanityManager()
 {
     PrimaryActorTick.bCanEverTick = false;
 
-    MaxDistance = 1000.0f;
+    MaxDistance = 180.0f;
     InsanityIncreaseRate = 1.0f;
     InsanityDecreaseRate = 0.5f;
     InsanityThreshold = 50.0f;
@@ -34,7 +34,7 @@ void AInsanityManager::BeginPlay()
 
     if (Player1Controller)
     {
-        
+    
     }
 
     if (Player2Controller)
