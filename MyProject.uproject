@@ -3,16 +3,6 @@
 	"EngineAssociation": "5.1",
 	"Category": "",
 	"Description": "",
-	"Modules": [
-		{
-			"Name": "MyProject",
-			"Type": "Runtime",
-			"LoadingPhase": "Default",
-			"AdditionalDependencies": [
-				"Engine"
-			]
-		}
-	],
 	"Plugins": [
 		{
 			"Name": "ModelingToolsEditorMode",
@@ -30,10 +20,6 @@
 		},
 		{
 			"Name": "RawInput",
-			"Enabled": true
-		},
-		{
-			"Name": "FbxAutomationTestBuilder",
 			"Enabled": true
 		}
 	]
