@@ -8,7 +8,7 @@ AInsanityManager::AInsanityManager()
 {
     PrimaryActorTick.bCanEverTick = false;
 
-    MaxDistance = 1000.0f;
+    MaxDistance = 180.0f;
     InsanityIncreaseRate = 1.0f;
     InsanityDecreaseRate = 0.5f;
     InsanityThreshold = 50.0f;
@@ -34,12 +34,12 @@ void AInsanityManager::BeginPlay()
 
     if (Player1Controller)
     {
-        ScreenPostProcess->AttachToComponent(Player1Controller->GetPawn()->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
+    
     }
 
     if (Player2Controller)
     {
-        ScreenPostProcess->AttachToComponent(Player2Controller->GetPawn()->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
+        
     }
 
     // Bind the timeline functions
@@ -65,25 +65,6 @@ void AInsanityManager::CalculateInsanityMeter()
         FVector Player2Location = Player2Controller->GetPawn()->GetActorLocation();
 
         float Distance = FVector::Distance(Player1Location, Player2Location);
-
-        if (Distance > MaxDistance)
-        {
-            InsanityMeter += InsanityIncreaseRate;
-            if (InsanityMeter > InsanityThreshold)
-            {
-                // Start the timeline to fade the screen to gray
-                
-            }
-        }
-        else
-        {
-            InsanityMeter -= InsanityDecreaseRate;
-            if (InsanityMeter <= InsanityThreshold)
-            {
-                // Reverse the timeline to fade the screen back to normal
-                
-            }
-        }
     }
 }
 
